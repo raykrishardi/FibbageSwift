@@ -27,6 +27,14 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         
         answerPicker.dataSource = self
         answerPicker.delegate = self
+        
+    }
+    
+    // MARK: - viewDidAppear()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        getUserInput()
     }
     
     // MARK: - UIPickerViewDataSource and UIPickerViewDelegate delegate method
@@ -45,6 +53,26 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedAnswer = answers[row]
         print(selectedAnswer)
+    }
+    
+    // MARK: - UIAlertController
+    func getUserInput() {
+        let alertController = UIAlertController(title: "Enter Bluff", message: "", preferredStyle: .alert)
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter Bluff"
+        }
+        
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { (UIAlertAction) in
+            let textField = alertController.textFields![0] as UITextField
+            
+            // TODO: Process user input
+            print(textField.text!)
+        }
+        
+        alertController.addAction(submitAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - IBAction

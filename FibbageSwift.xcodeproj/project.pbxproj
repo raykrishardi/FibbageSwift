@@ -54,14 +54,38 @@
 		71D8F6142256126A009B3682 /* FibbageSwift */ = {
 			isa = PBXGroup;
 			children = (
+				71D8F62722561F8A009B3682 /* Model */,
+				71D8F62822561F90009B3682 /* View */,
+				71D8F62922561F97009B3682 /* Controller */,
 				71D8F6152256126A009B3682 /* AppDelegate.swift */,
-				71D8F6172256126A009B3682 /* ViewController.swift */,
-				71D8F6192256126A009B3682 /* Main.storyboard */,
 				71D8F61C2256126B009B3682 /* Assets.xcassets */,
 				71D8F61E2256126B009B3682 /* LaunchScreen.storyboard */,
 				71D8F6212256126B009B3682 /* Info.plist */,
 			);
 			path = FibbageSwift;
+			sourceTree = "<group>";
+		};
+		71D8F62722561F8A009B3682 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		71D8F62822561F90009B3682 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				71D8F6192256126A009B3682 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		71D8F62922561F97009B3682 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				71D8F6172256126A009B3682 /* ViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
