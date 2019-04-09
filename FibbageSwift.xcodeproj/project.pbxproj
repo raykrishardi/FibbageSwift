@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F00DAD488FECC47BBA1BCAA /* Pods_FibbageSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C45CB28A8D49536B1A67CA /* Pods_FibbageSwift.framework */; };
+		717F17CB225CEE780037D452 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 717F17CA225CEE780037D452 /* GoogleService-Info.plist */; };
 		71D8F6162256126A009B3682 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F6152256126A009B3682 /* AppDelegate.swift */; };
 		71D8F6182256126A009B3682 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F6172256126A009B3682 /* ViewController.swift */; };
 		71D8F61B2256126A009B3682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71D8F6192256126A009B3682 /* Main.storyboard */; };
@@ -15,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		35C45CB28A8D49536B1A67CA /* Pods_FibbageSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FibbageSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3819B20BA12AD27D44EB10BD /* Pods-FibbageSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FibbageSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift.release.xcconfig"; sourceTree = "<group>"; };
+		717F17CA225CEE780037D452 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		71D8F6122256126A009B3682 /* FibbageSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FibbageSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F6152256126A009B3682 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		71D8F6172256126A009B3682 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +27,7 @@
 		71D8F61C2256126B009B3682 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71D8F61F2256126B009B3682 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71D8F6212256126B009B3682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7077889177B4327196ADABC /* Pods-FibbageSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FibbageSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F00DAD488FECC47BBA1BCAA /* Pods_FibbageSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +47,8 @@
 			children = (
 				71D8F6142256126A009B3682 /* FibbageSwift */,
 				71D8F6132256126A009B3682 /* Products */,
+				E21861B4830C483FC2832317 /* Pods */,
+				9BF9AC24A0A2A459BC286A9B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +70,7 @@
 				71D8F61C2256126B009B3682 /* Assets.xcassets */,
 				71D8F61E2256126B009B3682 /* LaunchScreen.storyboard */,
 				71D8F6212256126B009B3682 /* Info.plist */,
+				717F17CA225CEE780037D452 /* GoogleService-Info.plist */,
 			);
 			path = FibbageSwift;
 			sourceTree = "<group>";
@@ -88,6 +98,23 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		9BF9AC24A0A2A459BC286A9B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35C45CB28A8D49536B1A67CA /* Pods_FibbageSwift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E21861B4830C483FC2832317 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A7077889177B4327196ADABC /* Pods-FibbageSwift.debug.xcconfig */,
+				3819B20BA12AD27D44EB10BD /* Pods-FibbageSwift.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -95,9 +122,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 71D8F6242256126B009B3682 /* Build configuration list for PBXNativeTarget "FibbageSwift" */;
 			buildPhases = (
+				33FAD2315ECBA24F71A09A92 /* [CP] Check Pods Manifest.lock */,
 				71D8F60E2256126A009B3682 /* Sources */,
 				71D8F60F2256126A009B3682 /* Frameworks */,
 				71D8F6102256126A009B3682 /* Resources */,
+				0C0BFC8D683BBB5E123A8332 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -146,6 +175,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				717F17CB225CEE780037D452 /* GoogleService-Info.plist in Resources */,
 				71D8F6202256126B009B3682 /* LaunchScreen.storyboard in Resources */,
 				71D8F61D2256126B009B3682 /* Assets.xcassets in Resources */,
 				71D8F61B2256126A009B3682 /* Main.storyboard in Resources */,
@@ -153,6 +183,55 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0C0BFC8D683BBB5E123A8332 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		33FAD2315ECBA24F71A09A92 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FibbageSwift-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		71D8F60E2256126A009B3682 /* Sources */ = {
@@ -304,6 +383,7 @@
 		};
 		71D8F6252256126B009B3682 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7077889177B4327196ADABC /* Pods-FibbageSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -322,6 +402,7 @@
 		};
 		71D8F6262256126B009B3682 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3819B20BA12AD27D44EB10BD /* Pods-FibbageSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

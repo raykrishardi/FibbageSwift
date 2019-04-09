@@ -25,9 +25,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        answerPicker.dataSource = self
-        answerPicker.delegate = self
-        
+        setupPickerView()
     }
     
     // MARK: - viewDidAppear()
@@ -35,6 +33,12 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         super.viewDidAppear(true)
         
         getUserInput()
+    }
+    
+    // MARK: - Setup UIPickerView data source and delegate
+    func setupPickerView() {
+        answerPicker.dataSource = self
+        answerPicker.delegate = self
     }
     
     // MARK: - UIPickerViewDataSource and UIPickerViewDelegate delegate method
