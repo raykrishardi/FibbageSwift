@@ -16,8 +16,32 @@ class MainMenuViewController: UIViewController {
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
-    var searchPlayerTimer: Timer?
-    let SEARCH_PLAYER_TIME_INTERVAL = 5.0
+    var sessionActive: Bool = false {
+        didSet {
+            if sessionActive {
+//                searchPlayerTimer?.invalidate()
+//                searchSessionTimer?.invalidate()
+                performSegue(withIdentifier: "goToBluff", sender: self)
+                SVProgressHUD.dismiss()
+                
+//                searchPlayerTimer?.invalidate()
+            } else {
+                
+                getSession()
+                searchPlayer()
+                
+//                searchSessionTimer = Timer.scheduledTimer(timeInterval: SEARCH_SESSION_TIME_INTERVAL, target: self, selector: #selector(), userInfo: nil, repeats: true)
+//
+//                // Search another player every 5 seconds
+//                searchPlayerTimer = Timer.scheduledTimer(timeInterval: SEARCH_PLAYER_TIME_INTERVAL, target: self, selector: #selector(searchPlayer), userInfo: nil, repeats: true)
+            }
+        }
+    }
+//    var searchPlayerTimer: Timer?
+//    let SEARCH_PLAYER_TIME_INTERVAL = 5.0
+//
+//    var searchSessionTimer: Timer?
+//    let SEARCH_SESSION_TIME_INTERVAL = 3.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,8 +71,38 @@ class MainMenuViewController: UIViewController {
         
         print("***\nSuccessfully added a new user to FireStore\n***")
         
-        // Search another player every 5 seconds
-        searchPlayerTimer = Timer.scheduledTimer(timeInterval: SEARCH_PLAYER_TIME_INTERVAL, target: self, selector: #selector(searchPlayer), userInfo: nil, repeats: true)
+        getSession()
+        
+    }
+    
+    @objc func getSession() {
+        let db = Firestore.firestore()
+        
+        db.collection("sessions").getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error retrieving sessions: \(error)")
+            } else {
+                
+                let documents = querySnapshot!.documents
+                
+                if documents.count == 0 {
+                    self.sessionActive = false
+                } else {
+                    for document in documents {
+                        if let player1 = document["player1"] as? String {
+                            self.player2 = (player1 != self.player1) ? document["player2"] as! String : player1
+                            self.sessionActive = true
+                            
+                            break
+                        }
+                    }
+                }
+                
+                
+
+            }
+        }
+        
     }
     
     @objc func searchPlayer() {
@@ -76,13 +130,11 @@ class MainMenuViewController: UIViewController {
                         db.collection("players").document(self.player1!).setData(["searchingForOpponent": false], merge: true)
                         db.collection("players").document(self.player2!).setData(["searchingForOpponent" : false], merge: true)
                         
+                        // Create a new "sessions" collection for player 1 and player 2
+                        db.collection("sessions").addDocument(data: ["player1": self.player1!,"player2": self.player2!])
+                        
+                        self.sessionActive = true
 
-                        
-                        self.performSegue(withIdentifier: "goToBluff", sender: self)
-                        SVProgressHUD.dismiss()
-                        
-                        self.searchPlayerTimer?.invalidate()
-                        
                         break
                     }
                 }
