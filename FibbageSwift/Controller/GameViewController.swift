@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
     // MARK: - IBOutlet
     @IBOutlet weak var questionLabel: UILabel!
@@ -19,20 +19,17 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     @IBOutlet weak var scoreLabel: UILabel!
     
     // MARK: - Class-level variable
+    var questions: [Question] = []
     var answers = ["a", "b", "c", "d"]
+    var player1: String?
+    var player2: String?
+    var playerBluff: String?
     
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupPickerView()
-    }
-    
-    // MARK: - viewDidAppear()
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
-        getUserInput()
     }
     
     // MARK: - Setup UIPickerView data source and delegate
@@ -59,25 +56,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         print(selectedAnswer)
     }
     
-    // MARK: - UIAlertController
-    func getUserInput() {
-        let alertController = UIAlertController(title: "Enter Bluff", message: "", preferredStyle: .alert)
-        
-        alertController.addTextField { (textField) in
-            textField.placeholder = "Enter Bluff"
-        }
-        
-        let submitAction = UIAlertAction(title: "Submit", style: .default) { (UIAlertAction) in
-            let textField = alertController.textFields![0] as UITextField
-            
-            // TODO: Process user input
-            print(textField.text!)
-        }
-        
-        alertController.addAction(submitAction)
-        
-        present(alertController, animated: true, completion: nil)
-    }
+    
     
     // MARK: - IBAction
     @IBAction func buttonPressed(_ sender: Any) {

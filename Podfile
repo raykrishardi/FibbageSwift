@@ -8,5 +8,7 @@ target 'FibbageSwift' do
   # Pods for FibbageSwift
     pod 'Firebase/Core'
     pod 'Firebase/Firestore'
+    pod 'Firebase/Auth'
+    pod 'SVProgressHUD'
 
 end

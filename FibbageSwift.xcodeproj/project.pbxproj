@@ -9,8 +9,11 @@
 /* Begin PBXBuildFile section */
 		2F00DAD488FECC47BBA1BCAA /* Pods_FibbageSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C45CB28A8D49536B1A67CA /* Pods_FibbageSwift.framework */; };
 		717F17CB225CEE780037D452 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 717F17CA225CEE780037D452 /* GoogleService-Info.plist */; };
+		71D70180225DB7E80077B370 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D7017F225DB7E80077B370 /* Question.swift */; };
+		71D70182225DC0FA0077B370 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D70181225DC0FA0077B370 /* MainMenuViewController.swift */; };
+		71D70184225DC2170077B370 /* BluffViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D70183225DC2170077B370 /* BluffViewController.swift */; };
 		71D8F6162256126A009B3682 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F6152256126A009B3682 /* AppDelegate.swift */; };
-		71D8F6182256126A009B3682 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F6172256126A009B3682 /* ViewController.swift */; };
+		71D8F6182256126A009B3682 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8F6172256126A009B3682 /* GameViewController.swift */; };
 		71D8F61B2256126A009B3682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71D8F6192256126A009B3682 /* Main.storyboard */; };
 		71D8F61D2256126B009B3682 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71D8F61C2256126B009B3682 /* Assets.xcassets */; };
 		71D8F6202256126B009B3682 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71D8F61E2256126B009B3682 /* LaunchScreen.storyboard */; };
@@ -20,9 +23,12 @@
 		35C45CB28A8D49536B1A67CA /* Pods_FibbageSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FibbageSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3819B20BA12AD27D44EB10BD /* Pods-FibbageSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FibbageSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift.release.xcconfig"; sourceTree = "<group>"; };
 		717F17CA225CEE780037D452 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		71D7017F225DB7E80077B370 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		71D70181225DC0FA0077B370 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		71D70183225DC2170077B370 /* BluffViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluffViewController.swift; sourceTree = "<group>"; };
 		71D8F6122256126A009B3682 /* FibbageSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FibbageSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F6152256126A009B3682 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		71D8F6172256126A009B3682 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		71D8F6172256126A009B3682 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		71D8F61A2256126A009B3682 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		71D8F61C2256126B009B3682 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71D8F61F2256126B009B3682 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -42,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		71D7017E225DB7DE0077B370 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				71D7017F225DB7E80077B370 /* Question.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		71D8F6092256126A009B3682 = {
 			isa = PBXGroup;
 			children = (
@@ -63,7 +77,7 @@
 		71D8F6142256126A009B3682 /* FibbageSwift */ = {
 			isa = PBXGroup;
 			children = (
-				71D8F62722561F8A009B3682 /* Model */,
+				71D7017E225DB7DE0077B370 /* Model */,
 				71D8F62822561F90009B3682 /* View */,
 				71D8F62922561F97009B3682 /* Controller */,
 				71D8F6152256126A009B3682 /* AppDelegate.swift */,
@@ -73,13 +87,6 @@
 				717F17CA225CEE780037D452 /* GoogleService-Info.plist */,
 			);
 			path = FibbageSwift;
-			sourceTree = "<group>";
-		};
-		71D8F62722561F8A009B3682 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		71D8F62822561F90009B3682 /* View */ = {
@@ -93,7 +100,9 @@
 		71D8F62922561F97009B3682 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				71D8F6172256126A009B3682 /* ViewController.swift */,
+				71D70181225DC0FA0077B370 /* MainMenuViewController.swift */,
+				71D70183225DC2170077B370 /* BluffViewController.swift */,
+				71D8F6172256126A009B3682 /* GameViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -195,8 +204,10 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -207,8 +218,10 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -248,7 +261,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71D8F6182256126A009B3682 /* ViewController.swift in Sources */,
+				71D70180225DB7E80077B370 /* Question.swift in Sources */,
+				71D8F6182256126A009B3682 /* GameViewController.swift in Sources */,
+				71D70184225DC2170077B370 /* BluffViewController.swift in Sources */,
+				71D70182225DC0FA0077B370 /* MainMenuViewController.swift in Sources */,
 				71D8F6162256126A009B3682 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
