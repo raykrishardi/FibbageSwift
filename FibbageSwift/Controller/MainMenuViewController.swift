@@ -16,6 +16,7 @@ class MainMenuViewController: UIViewController {
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
+    var opponentFound: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,7 @@ class MainMenuViewController: UIViewController {
         print("***\nSuccessfully added a new user to FireStore\n***")
         
         checkExistingOpponent()
-        getNewOpponent()
+//        getNewOpponent()
         
 
     }
@@ -62,6 +63,10 @@ class MainMenuViewController: UIViewController {
             
             for document in documents {
                 if (document["opponent"] as! String) == self.player1 {
+                    
+                    print("***\nOpponent found!\n***")
+                    self.opponentFound = true
+                    
                     self.player2 = document["playerID"] as? String
                     
                     db.collection("players").document(self.player1!).setData(["opponent": self.player2!], merge: true)
@@ -69,6 +74,14 @@ class MainMenuViewController: UIViewController {
                     self.performSegue(withIdentifier: "goToBluff", sender: self)
                     SVProgressHUD.dismiss()
                 }
+            }
+            
+            if !self.opponentFound {
+                print("***\nOpponent NOT found!\n***")
+                
+                Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false, block: { (timer) in
+                    self.getNewOpponent()
+                })
             }
             
         }
@@ -88,6 +101,14 @@ class MainMenuViewController: UIViewController {
                 if opponent == "" {
                     print("No opponent yet, searching for player...")
                     self.searchOpponent()
+                } else {
+                    print("***\nOpponent found!\n***")
+                    self.opponentFound = true
+                    
+                    self.player2 = opponent
+                    
+                    self.performSegue(withIdentifier: "goToBluff", sender: self)
+                    SVProgressHUD.dismiss()
                 }
 
             }
@@ -112,6 +133,9 @@ class MainMenuViewController: UIViewController {
                     let opponent = document["opponent"] as! String
                 
                     if playerID != self.player1 && opponent == "" {
+                        
+                        self.opponentFound = true
+                        
                         self.player2 = playerID
                         print("***\nOpponent ID: \(self.player2!)\n***")
                         
@@ -128,6 +152,15 @@ class MainMenuViewController: UIViewController {
                         break
                     }
                 }
+                
+                if !self.opponentFound {
+                    print("***\nOpponent NOT found after searching!\n***")
+                    
+                    Timer.scheduledTimer(withTimeInterval: 8.0, repeats: false, block: { (timer) in
+                        self.checkExistingOpponent()
+                    })
+                }
+                
             }
         }
     }
