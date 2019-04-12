@@ -158,6 +158,7 @@
 				TargetAttributes = {
 					71D8F6112256126A009B3682 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -202,7 +203,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
@@ -229,7 +230,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FibbageSwift/Pods-FibbageSwift-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		33FAD2315ECBA24F71A09A92 /* [CP] Check Pods Manifest.lock */ = {
@@ -421,7 +422,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raykrishardi.FibbageSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -440,7 +441,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raykrishardi.FibbageSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
