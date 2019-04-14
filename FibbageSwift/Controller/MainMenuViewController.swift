@@ -13,6 +13,10 @@ import FirebaseFirestore
 
 class MainMenuViewController: UIViewController {
     
+    // MARK: - IBOutlet
+    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var searchPlayerLabel: UILabel!
+    
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
@@ -20,7 +24,11 @@ class MainMenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    }
+    
+    @IBAction func playButtonPressed(_ sender: UIButton) {
+        searchPlayerLabel.isHidden = false
+        playButton.isEnabled = false
         SVProgressHUD.show()
         anonymousSignIn()
     }
@@ -78,7 +86,7 @@ class MainMenuViewController: UIViewController {
                     
                     db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                     
-                    self.performSegue(withIdentifier: "goToBluff", sender: self)
+                    self.performSegue(withIdentifier: "goToGame", sender: self)
                     SVProgressHUD.dismiss()
                 }
                 
@@ -130,7 +138,7 @@ class MainMenuViewController: UIViewController {
                         
 
                         
-                        self.performSegue(withIdentifier: "goToBluff", sender: self)
+                        self.performSegue(withIdentifier: "goToGame", sender: self)
                         SVProgressHUD.dismiss()
                         
                         
@@ -151,8 +159,8 @@ class MainMenuViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToBluff" {
-            let destVC = segue.destination as! BluffViewController
+        if segue.identifier == "goToGame" {
+            let destVC = segue.destination as! GameViewController
             
             destVC.player1 = self.player1
             destVC.player2 = self.player2
