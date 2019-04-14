@@ -42,7 +42,7 @@ class MainMenuViewController: UIViewController {
     func addPlayerToFirestore() {
         let db = Firestore.firestore()
         
-        db.collection("players").document(player1!).setData(["playerID": player1!, "opponent": ""], merge: true)
+        db.collection("players").document(player1!).setData(["playerID": player1!, "hasOpponent": false], merge: true)
         
         print("***\nSuccessfully added a new user to FireStore\n***")
         
@@ -76,7 +76,7 @@ class MainMenuViewController: UIViewController {
                     // TODO: Set player 2 from the session by checking the player ID to player1 ID
                     self.player2 = (p1 == self.player1) ? self.player2 : self.player1
                     
-                    db.collection("players").document(self.player1!).setData(["opponent": self.player2!], merge: true)
+                    db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                     
                     self.performSegue(withIdentifier: "goToBluff", sender: self)
                     SVProgressHUD.dismiss()
@@ -87,7 +87,7 @@ class MainMenuViewController: UIViewController {
             if !self.opponentFound {
                 print("***\nOpponent NOT found!\n***")
                 
-                Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false, block: { (timer) in
+                Timer.scheduledTimer(withTimeInterval: 6.0, repeats: false, block: { (timer) in
                     self.searchOpponent()
                 })
             }
@@ -95,34 +95,7 @@ class MainMenuViewController: UIViewController {
             
         }
     }
-    
-//    func getNewOpponent() {
-//        let db = Firestore.firestore()
-//
-//        db.collection("players").document(player1!).getDocument { (document, error) in
-//            if let error = error {
-//                print("Error fetching document: \(error)")
-//            } else {
-//                let opponent = document!["opponent"] as! String
-//
-//                print(opponent)
-//
-//                if opponent == "" {
-//                    print("No opponent yet, searching for player...")
-//                    self.searchOpponent()
-//                } else {
-//                    print("***\nOpponent found!\n***")
-//                    self.opponentFound = true
-//
-//                    self.player2 = opponent
-//
-//                    self.performSegue(withIdentifier: "goToBluff", sender: self)
-//                    SVProgressHUD.dismiss()
-//                }
-//
-//            }
-//        }
-//    }
+   
     
     // TODO: Add player ID to a new session
     @objc func searchOpponent() {
@@ -140,9 +113,9 @@ class MainMenuViewController: UIViewController {
             if documents.count >= 2 {
                 for document in documents {
                     let playerID = document["playerID"] as! String
-                    let opponent = document["opponent"] as! String
+                    let hasOpponent = document["hasOpponent"] as! Bool
                 
-                    if playerID != self.player1 && opponent == "" {
+                    if playerID != self.player1 && !hasOpponent {
                         
                         self.opponentFound = true
                         
@@ -153,8 +126,7 @@ class MainMenuViewController: UIViewController {
                         
                         db.collection("sessions").addDocument(data: ["player1": self.player1!, "player2": self.player2!])
                         
-                        db.collection("players").document(self.player1!).setData(["opponent": self.player2!], merge: true)
-//                        db.collection("players").document(self.player2!).setData(["opponent" : self.player1!], merge: true)
+                        db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                         
 
                         
