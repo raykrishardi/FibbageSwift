@@ -10,15 +10,14 @@ import Foundation
 
 class Question {
     let text: String
-    let answer: String
-    let bluff1: String
-    let bluff2: String
+    var answers: [String] = []
     
-    init(text: String, answer: String, bluff1: String, bluff2: String) {
+    init(text: String, answer: String, bluff: String, playerBluff1: String, playerBluff2: String) {
         self.text = text
-        self.answer = answer
-        self.bluff1 = bluff1
-        self.bluff2 = bluff2
+        self.answers.append(answer)
+        self.answers.append(bluff)
+        self.answers.append(playerBluff1)
+        self.answers.append(playerBluff2)
     }
     
 }

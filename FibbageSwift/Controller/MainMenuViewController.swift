@@ -82,7 +82,7 @@ class MainMenuViewController: UIViewController {
                     self.opponentFound = true
                     
                     // TODO: Set player 2 from the session by checking the player ID to player1 ID
-                    self.player2 = (p1 == self.player1) ? self.player2 : self.player1
+                    self.player2 = (p1 == self.player1) ? p2 : p1
                     
                     db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                     

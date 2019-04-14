@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseFirestore
+import SVProgressHUD
 
 class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
@@ -28,13 +29,11 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     let GET_USER_INPUT_TIME_INTERVAL = 10.0
     
     var questions: [Question] = []
-    var answers = [String]()
-
+    var questionIndex = 0
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupPickerView()
     }
     
     // MARK: - viewDidAppear()
@@ -47,6 +46,42 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
             self.submitPlayerBluff()
 
+        }
+        
+    }
+    
+    func getQuestion() {
+        let db = Firestore.firestore()
+        
+        db.collection("questions").document("question\(questionIndex+1)").getDocument { (document, error) in
+            guard let document = document, document.exists else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            if let playerBluff1 = document[self.player1!] as? [String: String], let playerBluff2 = document[self.player2!] as? [String: String] {
+                
+                self.questions.append(Question(text: document["text"] as! String,
+                                               answer: document["answer"] as! String,
+                                               bluff: document["bluff"] as! String,
+                                               playerBluff1: playerBluff1["playerBluff"]!,
+                                               playerBluff2: playerBluff2["playerBluff"]!))
+                
+                print("***\n\(self.questions[self.questions.count-1].answers)\n***")
+                
+                self.setupPickerView() // If called in viewDidLoad then will crash (index out of range)
+
+            } else {
+                SVProgressHUD.show(withStatus: "Waiting for the opponent to enter a bluff")
+
+                Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
+                    print("Opponent has not entered a bluff")
+                    SVProgressHUD.dismiss()
+                    self.getQuestion()
+                })
+            }
+            
+            
         }
         
     }
@@ -84,6 +119,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     func submitPlayerBluff() {
         addPlayerBluffToFirestore()
         dismiss(animated: true, completion: nil) // Dismiss UIAlertController when the timer ends
+        getQuestion()
     }
     
     // MARK: - Setup UIPickerView data source and delegate
@@ -98,15 +134,15 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return answers.count
+        return questions[questionIndex].answers.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return answers[row]
+        return questions[questionIndex].answers[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedAnswer = answers[row]
+        let selectedAnswer = questions[questionIndex].answers[row]
         print(selectedAnswer)
     }
     
