@@ -16,7 +16,7 @@ class MainMenuViewController: UIViewController {
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
-    var opponentFound: Bool = false
+    var opponentFound = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,66 +55,76 @@ class MainMenuViewController: UIViewController {
     func checkExistingOpponent() {
         let db = Firestore.firestore()
         
-        db.collection("players").getDocuments { (querySnapshot, error) in
+        db.collection("sessions").getDocuments { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching documents: \(error!)")
                 return
             }
             
+            
             for document in documents {
-                if (document["opponent"] as! String) == self.player1 {
-                    
+                
+                let p1 = document["player1"] as! String
+                let p2 = document["player2"] as! String
+                
+                let hasActiveSession = (p1 == self.player1 || p2 == self.player1)
+                
+                if hasActiveSession {
                     print("***\nOpponent found!\n***")
                     self.opponentFound = true
                     
-                    self.player2 = document["playerID"] as? String
+                    // TODO: Set player 2 from the session by checking the player ID to player1 ID
+                    self.player2 = (p1 == self.player1) ? self.player2 : self.player1
                     
                     db.collection("players").document(self.player1!).setData(["opponent": self.player2!], merge: true)
                     
                     self.performSegue(withIdentifier: "goToBluff", sender: self)
                     SVProgressHUD.dismiss()
                 }
+                
             }
             
             if !self.opponentFound {
                 print("***\nOpponent NOT found!\n***")
                 
                 Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false, block: { (timer) in
-                    self.getNewOpponent()
+                    self.searchOpponent()
                 })
             }
+            
             
         }
     }
     
-    func getNewOpponent() {
-        let db = Firestore.firestore()
-        
-        db.collection("players").document(player1!).getDocument { (document, error) in
-            if let error = error {
-                print("Error fetching document: \(error)")
-            } else {
-                let opponent = document!["opponent"] as! String
-                
-                print(opponent)
-                
-                if opponent == "" {
-                    print("No opponent yet, searching for player...")
-                    self.searchOpponent()
-                } else {
-                    print("***\nOpponent found!\n***")
-                    self.opponentFound = true
-                    
-                    self.player2 = opponent
-                    
-                    self.performSegue(withIdentifier: "goToBluff", sender: self)
-                    SVProgressHUD.dismiss()
-                }
-
-            }
-        }
-    }
+//    func getNewOpponent() {
+//        let db = Firestore.firestore()
+//
+//        db.collection("players").document(player1!).getDocument { (document, error) in
+//            if let error = error {
+//                print("Error fetching document: \(error)")
+//            } else {
+//                let opponent = document!["opponent"] as! String
+//
+//                print(opponent)
+//
+//                if opponent == "" {
+//                    print("No opponent yet, searching for player...")
+//                    self.searchOpponent()
+//                } else {
+//                    print("***\nOpponent found!\n***")
+//                    self.opponentFound = true
+//
+//                    self.player2 = opponent
+//
+//                    self.performSegue(withIdentifier: "goToBluff", sender: self)
+//                    SVProgressHUD.dismiss()
+//                }
+//
+//            }
+//        }
+//    }
     
+    // TODO: Add player ID to a new session
     @objc func searchOpponent() {
         print("Searching another player...")
         
@@ -140,6 +150,9 @@ class MainMenuViewController: UIViewController {
                         print("***\nOpponent ID: \(self.player2!)\n***")
                         
                         // TODO: Set "searchingForOpponent" to false in FireStore
+                        
+                        db.collection("sessions").addDocument(data: ["player1": self.player1!, "player2": self.player2!])
+                        
                         db.collection("players").document(self.player1!).setData(["opponent": self.player2!], merge: true)
 //                        db.collection("players").document(self.player2!).setData(["opponent" : self.player1!], merge: true)
                         
