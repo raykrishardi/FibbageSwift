@@ -15,7 +15,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     // MARK: - IBOutlet
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerPicker: UIPickerView!
-    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var progressLabel: UILabel!
     @IBOutlet weak var progressView: UIView!
     @IBOutlet weak var scoreLabel: UILabel!
@@ -30,10 +30,15 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     var questions: [Question] = []
     var questionIndex = 0
+    let TOTAL_NUM_OF_QUESTIONS = 5
+    var score = 0
+    var selectedAnswer = ""
 
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        getQuestionText()
     }
     
     // MARK: - viewDidAppear()
@@ -43,14 +48,29 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
         getUserInput()
         
         getUserInputTimer = Timer.scheduledTimer(withTimeInterval: GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
-    
             self.submitPlayerBluff()
-
         }
         
     }
     
-    func getQuestion() {
+    func getQuestionText() {
+        let db = Firestore.firestore()
+        
+        db.collection("questions").getDocuments { (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching documents: \(error!)")
+                return
+            }
+            
+            for document in documents {
+                self.questions.append(Question(text: document["text"] as! String))
+            }
+            
+            self.updateUI()
+        }
+    }
+    
+    func setQuestionAnswers() {
         let db = Firestore.firestore()
         
         db.collection("questions").document("question\(questionIndex+1)").getDocument { (document, error) in
@@ -61,15 +81,12 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
             
             if let playerBluff1 = document[self.player1!] as? [String: String], let playerBluff2 = document[self.player2!] as? [String: String] {
                 
-                self.questions.append(Question(text: document["text"] as! String,
-                                               answer: document["answer"] as! String,
-                                               bluff: document["bluff"] as! String,
-                                               playerBluff1: playerBluff1["playerBluff"]!,
-                                               playerBluff2: playerBluff2["playerBluff"]!))
+                self.questions[self.questionIndex].setAnswers(answer: document["answer"] as! String, bluff: document["bluff"] as! String, playerBluff1: playerBluff1["playerBluff"]!, playerBluff2: playerBluff2["playerBluff"]!)
                 
-                print("***\n\(self.questions[self.questions.count-1].answers)\n***")
+                print("***\n\(self.questions[self.questionIndex].answers)\n***")
                 
                 self.setupPickerView() // If called in viewDidLoad then will crash (index out of range)
+//                self.updateUI()
 
             } else {
                 SVProgressHUD.show(withStatus: "Waiting for the opponent to enter a bluff")
@@ -77,7 +94,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
                 Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
                     print("Opponent has not entered a bluff")
                     SVProgressHUD.dismiss()
-                    self.getQuestion()
+                    self.setQuestionAnswers()
                 })
             }
             
@@ -88,7 +105,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     // MARK: - UIAlertController
     func getUserInput() {
-        let alertController = UIAlertController(title: "Enter Bluff", message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Enter a bluff", message: questions[questionIndex].text, preferredStyle: .alert)
         
         alertController.addTextField { (textField) in
             textField.placeholder = "Enter Bluff"
@@ -113,13 +130,13 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     func addPlayerBluffToFirestore() {
         let db = Firestore.firestore()
         
-        db.collection("questions").document("question1").setData([player1!: ["playerBluff": playerBluff]], merge: true)
+        db.collection("questions").document("question\(questionIndex+1)").setData([player1!: ["playerBluff": playerBluff]], merge: true)
     }
     
     func submitPlayerBluff() {
         addPlayerBluffToFirestore()
         dismiss(animated: true, completion: nil) // Dismiss UIAlertController when the timer ends
-        getQuestion()
+        setQuestionAnswers()
     }
     
     // MARK: - Setup UIPickerView data source and delegate
@@ -142,14 +159,29 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedAnswer = questions[questionIndex].answers[row]
+        selectedAnswer = questions[questionIndex].answers[row]
         print(selectedAnswer)
     }
     
-    
+    func updateUI() {
+        questionLabel.text = questions[questionIndex].text
+        progressLabel.text = "\(questionIndex+1)/\(TOTAL_NUM_OF_QUESTIONS)"
+        scoreLabel.text = "Score: \(score)"
+        progressView.frame.size.width = (view.frame.size.width / CGFloat(TOTAL_NUM_OF_QUESTIONS)) * CGFloat(questionIndex+1)
+    }
     
     // MARK: - IBAction
-    @IBAction func buttonPressed(_ sender: Any) {
+    @IBAction func nextButtonPressed(_ sender: Any) {
+        questionIndex += 1
+        
+        updateUI()
+        
+        getUserInput()
+        
+        getUserInputTimer = Timer.scheduledTimer(withTimeInterval: GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
+            self.submitPlayerBluff()
+        }
+        
     }
     
 

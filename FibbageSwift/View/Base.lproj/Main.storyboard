@@ -28,8 +28,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Question" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfB-6b-gQb">
-                                <rect key="frame" x="153" y="244" width="108" height="35"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Question" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfB-6b-gQb">
+                                <rect key="frame" x="20" y="244" width="374" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="30"/>
                                 <nil key="textColor"/>
@@ -55,12 +55,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ld2-Xr-ipS">
-                                <rect key="frame" x="171" y="611" width="72" height="42"/>
+                                <rect key="frame" x="182" y="611" width="51" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Next"/>
                                 <connections>
-                                    <action selector="buttonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5Y6-fB-C4Q"/>
+                                    <action selector="nextButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5Y6-fB-C4Q"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -69,16 +69,16 @@
                     </view>
                     <connections>
                         <outlet property="answerPicker" destination="HMy-2i-3fC" id="uNL-Tt-RN8"/>
+                        <outlet property="nextButton" destination="Ld2-Xr-ipS" id="GdZ-At-R3I"/>
                         <outlet property="progressLabel" destination="plR-vp-g8g" id="efD-8o-kOy"/>
                         <outlet property="progressView" destination="6tV-az-4dc" id="L7c-Nh-Niq"/>
                         <outlet property="questionLabel" destination="xfB-6b-gQb" id="h0v-iT-deg"/>
                         <outlet property="scoreLabel" destination="Tgp-i9-ZAF" id="tFV-sG-hdS"/>
-                        <outlet property="submitButton" destination="Ld2-Xr-ipS" id="GdZ-At-R3I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1449" y="29"/>
+            <point key="canvasLocation" x="1446.376811594203" y="28.532608695652176"/>
         </scene>
         <!--Main Menu View Controller-->
         <scene sceneID="f3m-hp-HBL">

@@ -12,8 +12,11 @@ class Question {
     let text: String
     var answers: [String] = []
     
-    init(text: String, answer: String, bluff: String, playerBluff1: String, playerBluff2: String) {
+    init(text: String) {
         self.text = text
+    }
+    
+    func setAnswers(answer: String, bluff: String, playerBluff1: String, playerBluff2: String) {
         self.answers.append(answer)
         self.answers.append(bluff)
         self.answers.append(playerBluff1)
