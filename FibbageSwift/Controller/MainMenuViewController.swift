@@ -50,7 +50,7 @@ class MainMenuViewController: UIViewController {
     func addPlayerToFirestore() {
         let db = Firestore.firestore()
         
-        db.collection("players").document(player1!).setData(["playerID": player1!, "hasOpponent": false], merge: true)
+        db.collection("players").document(player1!).setData(["playerID": player1!, "hasOpponent": false, "score": 0], merge: true)
         
         print("***\nSuccessfully added a new user to FireStore\n***")
         

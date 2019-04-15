@@ -31,7 +31,8 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     var questions: [Question] = []
     var questionIndex = 0
     let TOTAL_NUM_OF_QUESTIONS = 5
-    var score = 0
+    var player1Score = 0
+    var player2Score = 0
     var selectedAnswer = ""
 
     // MARK: - viewDidLoad()
@@ -143,6 +144,8 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     func setupPickerView() {
         answerPicker.dataSource = self
         answerPicker.delegate = self
+        answerPicker.selectRow(0, inComponent: 0, animated: false)
+        pickerView(answerPicker, didSelectRow: 0, inComponent: 0)
     }
     
     // MARK: - UIPickerViewDataSource and UIPickerViewDelegate delegate method
@@ -159,28 +162,81 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedAnswer = questions[questionIndex].answers[row]
-        print(selectedAnswer)
+        self.selectedAnswer = questions[questionIndex].answers[row]
+        print(self.selectedAnswer)
     }
     
     func updateUI() {
         questionLabel.text = questions[questionIndex].text
         progressLabel.text = "\(questionIndex+1)/\(TOTAL_NUM_OF_QUESTIONS)"
-        scoreLabel.text = "Score: \(score)"
+        scoreLabel.text = "P1 score: \(self.player1Score)\nP2 score: \(self.player2Score)"
         progressView.frame.size.width = (view.frame.size.width / CGFloat(TOTAL_NUM_OF_QUESTIONS)) * CGFloat(questionIndex+1)
+    }
+    
+    func checkPlayerAnswer() {
+        let correctAnswer = questions[questionIndex].answers[0]
+//        let defaultBluff = questions[questionIndex].answers[1]
+//        let player1Bluff = questions[questionIndex].answers[2]
+        let player2Bluff = questions[questionIndex].answers[3]
+
+        let db = Firestore.firestore()
+        
+        db.collection("players").document(self.player2!).getDocument { (document, error) in
+            guard let document = document, document.exists else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            var player2Score = document["score"] as! Int
+            
+            print("selected answer: \(self.selectedAnswer)")
+            print("correct answer: \(correctAnswer)")
+            print("player2 bluff: \(player2Bluff)")
+            
+            switch self.selectedAnswer {
+            case correctAnswer:
+                self.player1Score += 10
+                SVProgressHUD.showSuccess(withStatus: "Correct!")
+            case player2Bluff:
+                player2Score += 5
+                SVProgressHUD.showError(withStatus: "Player2 Bluff!")
+            default: SVProgressHUD.showError(withStatus: "Incorrect!")
+            }
+            
+            SVProgressHUD.dismiss(withDelay: 1.5)
+            
+            self.player2Score = player2Score
+            
+            print("***\nplayer1 score: \(self.player1Score)\n***")
+            print("***\nplayer2 score: \(player2Score)\n***")
+            
+            db.collection("players").document(self.player1!).setData(["score": self.player1Score], merge: true)
+            db.collection("players").document(self.player2!).setData(["score": player2Score], merge: true)
+            
+            self.questionIndex += 1
+            
+            self.updateUI()
+        }
+        
+        
+        
     }
     
     // MARK: - IBAction
     @IBAction func nextButtonPressed(_ sender: Any) {
-        questionIndex += 1
         
-        updateUI()
+        checkPlayerAnswer()
         
-        getUserInput()
-        
-        getUserInputTimer = Timer.scheduledTimer(withTimeInterval: GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
-            self.submitPlayerBluff()
+        // Delay the call by 3 seconds because if not then will overlap with success/error message of SVProgressHUD
+        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
+            self.getUserInput()
+            
+            self.getUserInputTimer = Timer.scheduledTimer(withTimeInterval: self.GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
+                self.submitPlayerBluff()
+            }
         }
+        
+
         
     }
     
