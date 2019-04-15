@@ -2,9 +2,9 @@
 Swift implementation of Fibbage 3 game by Jackbox Games
 
 Note:
-1. Need to perform these when application is terminated or game has finished
-    * FireStore
-        * Need to remove the active session document from "sessions" collection
-        * Need to remove each player from "players" collection
-        * Need to remove each player bluff from each question in "questions" collection
-    
+1. Bug with player scoring not updated properly
+2. Need to implement winner screen
+3. Need to cleanup code
+4. May need to improve code using listener instead of timer to reduce number of CRUD
+
+   
