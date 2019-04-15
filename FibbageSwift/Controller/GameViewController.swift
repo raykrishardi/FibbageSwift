@@ -23,6 +23,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
+    var sessionID: String?
     var playerBluff = ""
     
     var getUserInputTimer: Timer?
@@ -30,7 +31,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     var questions: [Question] = []
     var questionIndex = 0
-    let TOTAL_NUM_OF_QUESTIONS = 5
+    let TOTAL_NUM_OF_QUESTIONS = 2
     var player1Score = 0
     var player2Score = 0
     var selectedAnswer = ""
@@ -181,13 +182,22 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
 
         let db = Firestore.firestore()
         
+        db.collection("players").document(self.player1!).getDocument { (document, error) in
+            guard let document = document, document.exists else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            self.player1Score = document["score"] as! Int
+        }
+        
         db.collection("players").document(self.player2!).getDocument { (document, error) in
             guard let document = document, document.exists else {
                 print("Error fetching document: \(error!)")
                 return
             }
             
-            var player2Score = document["score"] as! Int
+            self.player2Score = document["score"] as! Int
             
             print("selected answer: \(self.selectedAnswer)")
             print("correct answer: \(correctAnswer)")
@@ -198,43 +208,144 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
                 self.player1Score += 10
                 SVProgressHUD.showSuccess(withStatus: "Correct!")
             case player2Bluff:
-                player2Score += 5
+                self.player2Score += 5
                 SVProgressHUD.showError(withStatus: "Player2 Bluff!")
             default: SVProgressHUD.showError(withStatus: "Incorrect!")
             }
             
             SVProgressHUD.dismiss(withDelay: 1.5)
             
-            self.player2Score = player2Score
-            
             print("***\nplayer1 score: \(self.player1Score)\n***")
-            print("***\nplayer2 score: \(player2Score)\n***")
+            print("***\nplayer2 score: \(self.player2Score)\n***")
             
             db.collection("players").document(self.player1!).setData(["score": self.player1Score], merge: true)
-            db.collection("players").document(self.player2!).setData(["score": player2Score], merge: true)
+            db.collection("players").document(self.player2!).setData(["score": self.player2Score], merge: true)
             
             self.questionIndex += 1
             
-            self.updateUI()
+            if self.questionIndex < self.TOTAL_NUM_OF_QUESTIONS {
+                self.updateUI()
+                
+                // Delay the call by 2 seconds because if not then will overlap with success/error message of SVProgressHUD
+                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
+                    self.getUserInput()
+                    
+                    self.getUserInputTimer = Timer.scheduledTimer(withTimeInterval: self.GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
+                        self.submitPlayerBluff()
+                    }
+                }
+            } else {
+                print("End of question!")
+                self.scoreLabel.text = "P1 score: \(self.player1Score)\nP2 score: \(self.player2Score)"
+                
+                Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
+                    self.promptRestartGame()
+                })
+                
+//                self.prepareToDeleteSession()
+                
+                
+//                db.collection("players").document(self.player1!).setData(["readyToEndSession": true], merge: true)
+//
+//                db.collection("players").document(self.player2!).addSnapshotListener({ (document, error) in
+//                    guard let document = document, document.exists else {
+//                        print("Error fetching document: \(error!)")
+//                        return
+//                    }
+//
+//                    if document["readyToEndSession"] != nil {
+//                        self.deleteSessionAndGameData()
+//                    }
+//                })
+                
+            }
         }
         
         
         
     }
     
+    func prepareToDeleteSession() {
+        let db = Firestore.firestore()
+        
+        db.collection("players").document(self.player1!).setData(["readyToEndSession": true], merge: true)
+
+        db.collection("players").document(self.player2!).getDocument { (document, error) in
+//            guard let document = document, document.exists else {
+//                print("Error fetching document: \(error!)")
+//                return
+//            }
+            
+            if let document = document, document.exists {
+                if document["readyToEndSession"] != nil {
+                    self.deleteSessionAndGameData()
+                } else {
+                    SVProgressHUD.show(withStatus: "Waiting for the opponent to end session")
+                    
+                    Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
+                        print("Opponent not ready to end session")
+                        SVProgressHUD.dismiss()
+                        self.prepareToDeleteSession()
+                    })
+                }
+            } else {
+                self.deleteSessionAndGameData()
+            }
+            
+
+        }
+        
+    }
+    
+    func deleteSessionAndGameData() {
+        let db = Firestore.firestore()
+        
+        db.collection("players").document(self.player1!).delete { (error) in
+            if let error = error {
+                print("Error removing player document: \(error)")
+            } else {
+                print("Player document successfully removed!")
+            }
+        }
+        
+        for i in 1...self.TOTAL_NUM_OF_QUESTIONS {
+            db.collection("questions").document("question\(i)").updateData([self.player1!: FieldValue.delete()]) { (error) in
+                if let error = error {
+                    print("Error removing question field: \(error)")
+                } else {
+                    print("Question field successfully removed!")
+                }
+            }
+        }
+        
+        db.collection("sessions").document(self.sessionID!).getDocument { (document, error) in
+            if let document = document, document.exists {
+                db.collection("sessions").document(self.sessionID!).delete()
+            }
+        }
+        
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func promptRestartGame() {
+        let alert = UIAlertController(title: "End of quiz", message: "Would you like to restart?", preferredStyle: .alert)
+        
+        let restartAction = UIAlertAction(title: "Restart", style: .default) { (UIAlertAction) in
+            self.prepareToDeleteSession()
+        }
+        
+        alert.addAction(restartAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - IBAction
     @IBAction func nextButtonPressed(_ sender: Any) {
+        self.playerBluff = ""
         
         checkPlayerAnswer()
         
-        // Delay the call by 3 seconds because if not then will overlap with success/error message of SVProgressHUD
-        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
-            self.getUserInput()
-            
-            self.getUserInputTimer = Timer.scheduledTimer(withTimeInterval: self.GET_USER_INPUT_TIME_INTERVAL, repeats: false) { (timer) in
-                self.submitPlayerBluff()
-            }
-        }
+
         
 
         

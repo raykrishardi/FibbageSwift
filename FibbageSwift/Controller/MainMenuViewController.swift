@@ -20,10 +20,19 @@ class MainMenuViewController: UIViewController {
     // MARK: - Class-level variable
     var player1: String?
     var player2: String?
+    var sessionID: String?
     var opponentFound = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        searchPlayerLabel.isHidden = true
+        playButton.isEnabled = true
+        self.opponentFound = false
     }
     
     @IBAction func playButtonPressed(_ sender: UIButton) {
@@ -84,6 +93,8 @@ class MainMenuViewController: UIViewController {
                     // TODO: Set player 2 from the session by checking the player ID to player1 ID
                     self.player2 = (p1 == self.player1) ? p2 : p1
                     
+                    self.sessionID = document.documentID
+                    
                     db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                     
                     self.performSegue(withIdentifier: "goToGame", sender: self)
@@ -132,11 +143,11 @@ class MainMenuViewController: UIViewController {
                         
                         // TODO: Set "searchingForOpponent" to false in FireStore
                         
-                        db.collection("sessions").addDocument(data: ["player1": self.player1!, "player2": self.player2!])
+                        let sessionRef = db.collection("sessions").addDocument(data: ["player1": self.player1!, "player2": self.player2!])
                         
                         db.collection("players").document(self.player1!).setData(["hasOpponent": true], merge: true)
                         
-
+                        self.sessionID = sessionRef.documentID
                         
                         self.performSegue(withIdentifier: "goToGame", sender: self)
                         SVProgressHUD.dismiss()
@@ -146,14 +157,16 @@ class MainMenuViewController: UIViewController {
                     }
                 }
                 
-                if !self.opponentFound {
-                    print("***\nOpponent NOT found after searching!\n***")
-                    
-                    Timer.scheduledTimer(withTimeInterval: 8.0, repeats: false, block: { (timer) in
-                        self.checkExistingOpponent()
-                    })
-                }
+
                 
+            }
+            
+            if !self.opponentFound {
+                print("***\nOpponent NOT found after searching!\n***")
+                
+                Timer.scheduledTimer(withTimeInterval: 8.0, repeats: false, block: { (timer) in
+                    self.checkExistingOpponent()
+                })
             }
         }
     }
@@ -164,6 +177,7 @@ class MainMenuViewController: UIViewController {
             
             destVC.player1 = self.player1
             destVC.player2 = self.player2
+            destVC.sessionID = self.sessionID
             
         
         }
