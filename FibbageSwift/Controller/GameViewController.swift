@@ -40,6 +40,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setPlayerScoreListener()
         getQuestionText()
     }
     
@@ -53,6 +54,37 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
             self.submitPlayerBluff()
         }
         
+    }
+    
+    func setPlayerScoreListener() {
+        let db = Firestore.firestore()
+        
+        db.collection("players").document(self.player1!).addSnapshotListener { (documentSnapshot, error) in
+            guard let document = documentSnapshot else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            if let score = document["score"] as? Int {
+                self.player1Score = score
+                self.scoreLabel.text = "P1 score: \(self.player1Score)\nP2 score: \(self.player2Score)"
+            }
+            
+            
+        }
+        
+        db.collection("players").document(self.player2!).addSnapshotListener { (documentSnapshot, error) in
+            guard let document = documentSnapshot else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            if let score = document["score"] as? Int {
+                self.player2Score = score
+                self.scoreLabel.text = "P1 score: \(self.player1Score)\nP2 score: \(self.player2Score)"
+            }
+            
+        }
     }
     
     func getQuestionText() {
