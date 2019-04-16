@@ -274,21 +274,6 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
                     self.promptRestartGame()
                 })
                 
-//                self.prepareToDeleteSession()
-                
-                
-//                db.collection("players").document(self.player1!).setData(["readyToEndSession": true], merge: true)
-//
-//                db.collection("players").document(self.player2!).addSnapshotListener({ (document, error) in
-//                    guard let document = document, document.exists else {
-//                        print("Error fetching document: \(error!)")
-//                        return
-//                    }
-//
-//                    if document["readyToEndSession"] != nil {
-//                        self.deleteSessionAndGameData()
-//                    }
-//                })
                 
             }
         }
@@ -303,10 +288,6 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
         db.collection("players").document(self.player1!).setData(["readyToEndSession": true], merge: true)
 
         db.collection("players").document(self.player2!).getDocument { (document, error) in
-//            guard let document = document, document.exists else {
-//                print("Error fetching document: \(error!)")
-//                return
-//            }
             
             if let document = document, document.exists {
                 if document["readyToEndSession"] != nil {
@@ -360,7 +341,17 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     }
     
     func promptRestartGame() {
-        let alert = UIAlertController(title: "End of quiz", message: "Would you like to restart?", preferredStyle: .alert)
+        var title = ""
+        
+        if player1Score == player2Score {
+            title = "It's a Draw!"
+        } else {
+            title = (player1Score > player2Score) ? "P1 Wins!" : "P2 Wins!"
+        }
+        
+        let message = "P1 Score: \(player1Score)\nP2 Score: \(player2Score)"
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let restartAction = UIAlertAction(title: "Restart", style: .default) { (UIAlertAction) in
             self.prepareToDeleteSession()
