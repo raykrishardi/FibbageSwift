@@ -31,7 +31,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     var questions: [Question] = []
     var questionIndex = 0
-    let TOTAL_NUM_OF_QUESTIONS = 2
+    var totalNumberOfQuestions = 0
     var player1Score = 0
     var player2Score = 0
     var selectedAnswer = ""
@@ -97,6 +97,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
             }
             
             for document in documents {
+                self.totalNumberOfQuestions += 1
                 self.questions.append(Question(text: document["text"] as! String))
             }
             
@@ -201,9 +202,9 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
     
     func updateUI() {
         questionLabel.text = questions[questionIndex].text
-        progressLabel.text = "\(questionIndex+1)/\(TOTAL_NUM_OF_QUESTIONS)"
+        progressLabel.text = "\(questionIndex+1)/\(totalNumberOfQuestions)"
         scoreLabel.text = "P1 score: \(self.player1Score)\nP2 score: \(self.player2Score)"
-        progressView.frame.size.width = (view.frame.size.width / CGFloat(TOTAL_NUM_OF_QUESTIONS)) * CGFloat(questionIndex+1)
+        progressView.frame.size.width = (view.frame.size.width / CGFloat(totalNumberOfQuestions)) * CGFloat(questionIndex+1)
     }
     
     func checkPlayerAnswer() {
@@ -255,7 +256,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
             
             self.questionIndex += 1
             
-            if self.questionIndex < self.TOTAL_NUM_OF_QUESTIONS {
+            if self.questionIndex < self.totalNumberOfQuestions {
                 self.updateUI()
                 
                 // Delay the call by 2 seconds because if not then will overlap with success/error message of SVProgressHUD
@@ -321,7 +322,7 @@ class GameViewController: UIViewController, UIPickerViewDataSource, UIPickerView
             }
         }
         
-        for i in 1...self.TOTAL_NUM_OF_QUESTIONS {
+        for i in 1...self.totalNumberOfQuestions {
             db.collection("questions").document("question\(i)").updateData([self.player1!: FieldValue.delete()]) { (error) in
                 if let error = error {
                     print("Error removing question field: \(error)")
